@@ -103,6 +103,9 @@ else {
 if (requestedSlug === 'azure-application') {
   const founderMeta = [...document.querySelectorAll('.resource-meta span')].find(item => item.textContent.startsWith('Founder:'));
   if (founderMeta) founderMeta.textContent = 'Founder: Samson Fasasi';
+  const phoneMeta = document.createElement('span');
+  phoneMeta.innerHTML = '<a href="tel:+2348103520082">+234 810 352 0082</a>';
+  document.querySelector('.resource-meta')?.append(phoneMeta);
 }
 
 document.title = document.title.replaceAll('GeoLog', 'SamLog');
