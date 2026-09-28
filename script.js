@@ -73,39 +73,184 @@ function renderLibrary() {
   loadMore.hidden = visibleCount >= filtered.length;
 }
 
+function renderDemo() {
+  document.title = 'Try the SamLog demo';
+  const desktopNav = document.querySelector('.desktop-nav');
+  const mobileNav = document.querySelector('.mobile-menu nav');
+  const navMarkup = '<a href="index.html">Overview</a><a href="#demo-assets">Assets</a><a href="#demo-activity">Activity</a>';
+  if (desktopNav) desktopNav.innerHTML = navMarkup;
+  if (mobileNav) mobileNav.innerHTML = navMarkup;
+  const headerAction = document.querySelector('.site-header>.button');
+  if (headerAction) {
+    headerAction.href = 'index.html#contact';
+    headerAction.innerHTML = 'Contact SamLog <span aria-hidden="true">↗</span>';
+  }
+
+  const startingAssets = [
+    { id: 'SL-014', name: 'Generator set A', type: 'Power', site: 'Riverside depot', status: 'Needs review', due: 'Today', x: 25, y: 31 },
+    { id: 'SL-021', name: 'Water pump 02', type: 'Water', site: 'Riverside depot', status: 'Current', due: '18 Jun', x: 48, y: 23 },
+    { id: 'SL-033', name: 'Storage tank 1', type: 'Storage', site: 'North yard', status: 'Inspection due', due: 'Today', x: 72, y: 35 },
+    { id: 'SL-042', name: 'Transformer 4', type: 'Power', site: 'North yard', status: 'Current', due: '24 Jun', x: 38, y: 62 },
+    { id: 'SL-057', name: 'Access gate B', type: 'Security', site: 'East entrance', status: 'Needs review', due: 'Overdue', x: 65, y: 73 },
+    { id: 'SL-061', name: 'Drainage channel', type: 'Civil', site: 'Riverside depot', status: 'Current', due: '02 Jul', x: 84, y: 57 }
+  ];
+  let assets = startingAssets.map(asset => ({ ...asset }));
+  let selectedId = assets[0].id;
+  let activeView = 'map';
+  let activity = [
+    { time: 'Today · 09:42', title: 'Routine check recorded', detail: 'Water pump 02 · Riverside depot', kind: 'success' },
+    { time: 'Today · 08:15', title: 'Inspection flagged for review', detail: 'Generator set A · Riverside depot', kind: 'warning' },
+    { time: 'Yesterday · 16:30', title: 'Asset details updated', detail: 'Transformer 4 · North yard', kind: 'neutral' }
+  ];
+  const escapeHtml = value => String(value).replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]);
+
+  document.querySelector('main').innerHTML = `
+    <section class="demo-page" id="demo-app">
+      <div class="demo-wrap">
+        <div class="demo-breadcrumb"><a href="index.html">← SamLog</a><span>INTERACTIVE DEMO</span></div>
+        <header class="demo-heading"><div><p class="demo-eyebrow">SAMPLE WORKSPACE · PORT HARCOURT</p><h1>Site operations</h1><p>Explore a sample asset register, inspect a location and try logging a field visit.</p></div><button class="demo-primary" type="button" id="demo-add-inspection"><span aria-hidden="true">＋</span> Log inspection</button></header>
+        <p class="demo-disclosure"><span aria-hidden="true">i</span> Demo data is fictional. Changes stay in this browser session and reset when you reload.</p>
+        <div class="demo-metrics" aria-label="Workspace summary"><div><span>ASSETS</span><b id="demo-total">6</b><small>In this sample site</small></div><div><span>NEEDS ATTENTION</span><b id="demo-attention">3</b><small>Due or flagged</small></div><div><span>UP TO DATE</span><b id="demo-current">3</b><small>Marked current</small></div><div><span>ACTIVITY ITEMS</span><b id="demo-visits">3</b><small>In this demo session</small></div></div>
+        <div class="demo-toolbar"><div class="demo-tabs" role="tablist" aria-label="Workspace views"><button type="button" role="tab" aria-selected="true" data-view="map">Map</button><button type="button" role="tab" aria-selected="false" data-view="assets" id="demo-assets-tab">Assets</button><button type="button" role="tab" aria-selected="false" data-view="activity" id="demo-activity-tab">Activity</button></div><div class="demo-filters"><label class="demo-search"><span class="visually-hidden">Search assets</span><span aria-hidden="true">⌕</span><input id="demo-search" type="search" placeholder="Search assets" autocomplete="off"></label><label><span class="visually-hidden">Filter by status</span><select id="demo-status-filter"><option value="all">All statuses</option><option>Needs review</option><option>Inspection due</option><option>Current</option></select></label></div></div>
+        <div class="demo-workspace" id="demo-map-view" role="tabpanel">
+          <section class="demo-map-panel"><div class="demo-panel-heading"><div><h2>Riverside &amp; North Yard</h2><p>Sample site plan · select a marker to inspect an asset</p></div><span class="demo-site-chip"><i></i> Sample site</span></div><div class="demo-map-canvas" id="demo-map-canvas" role="group" aria-label="Sample site map with selectable assets"></div><div class="demo-map-legend"><span><i class="legend-current"></i> Current</span><span><i class="legend-due"></i> Inspection due</span><span><i class="legend-review"></i> Needs review</span></div></section>
+          <aside class="demo-detail-panel" id="demo-detail" aria-live="polite"></aside>
+        </div>
+        <section class="demo-table-panel" id="demo-assets-view" role="tabpanel" hidden><div class="demo-panel-heading"><div><h2>Asset register</h2><p>Six fictional assets across two sample sites</p></div><span id="demo-result-count">6 assets</span></div><div class="demo-table-scroll"><table><thead><tr><th>Asset</th><th>Type</th><th>Site</th><th>Status</th><th>Next inspection</th></tr></thead><tbody id="demo-asset-rows"></tbody></table></div><p class="demo-empty" id="demo-empty" hidden>No sample assets match these filters.</p></section>
+        <section class="demo-activity-panel" id="demo-activity-view" role="tabpanel" hidden><div class="demo-panel-heading"><div><h2>Recent activity</h2><p>Actions taken in this browser session</p></div></div><ol id="demo-activity-list"></ol></section>
+        <div class="demo-footer"><span>SamLog product demo · Fictional sample data</span><button type="button" id="demo-reset">Reset sample data</button></div>
+        <dialog class="demo-dialog" id="demo-inspection-dialog"><form id="demo-inspection-form"><div class="demo-dialog-heading"><div><p class="demo-eyebrow">FIELD VISIT</p><h2>Log an inspection</h2></div><button class="demo-icon-button" type="button" id="demo-dialog-close" aria-label="Close">×</button></div><label>Asset<select name="asset" id="demo-form-asset" required></select></label><label>Visit result<select name="result" required><option value="routine">Routine check completed</option><option value="followup">Follow-up needed</option></select></label><label>Field note<textarea name="note" rows="3" maxlength="240" placeholder="Add a short sample note (optional)"></textarea></label><p class="demo-form-hint">Use fictional details only. This demo does not save or send information.</p><div class="demo-dialog-actions"><button class="demo-secondary" type="button" id="demo-cancel">Cancel</button><button class="demo-primary" type="submit">Save inspection</button></div></form></dialog>
+        <div class="demo-toast" id="demo-toast" role="status" aria-live="polite"></div>
+      </div>
+    </section>`;
+
+  const root = document.querySelector('#demo-app');
+  const search = document.querySelector('#demo-search');
+  const statusFilter = document.querySelector('#demo-status-filter');
+  const dialog = document.querySelector('#demo-inspection-dialog');
+  const form = document.querySelector('#demo-inspection-form');
+  const toast = document.querySelector('#demo-toast');
+  let toastTimer;
+
+  function filteredAssets() {
+    const query = search.value.trim().toLowerCase();
+    const status = statusFilter.value;
+    return assets.filter(asset => {
+      const matchesQuery = `${asset.id} ${asset.name} ${asset.type} ${asset.site}`.toLowerCase().includes(query);
+      return matchesQuery && (status === 'all' || asset.status === status);
+    });
+  }
+
+  function showToast(message) {
+    toast.textContent = message;
+    toast.classList.add('is-visible');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('is-visible'), 2600);
+  }
+
+  function renderDemo() {
+    const visibleAssets = filteredAssets();
+    const selectedAsset = visibleAssets.find(asset => asset.id === selectedId) || visibleAssets[0];
+    if (selectedAsset) selectedId = selectedAsset.id;
+    document.querySelector('#demo-total').textContent = assets.length;
+    document.querySelector('#demo-attention').textContent = assets.filter(asset => asset.status !== 'Current').length;
+    document.querySelector('#demo-current').textContent = assets.filter(asset => asset.status === 'Current').length;
+    document.querySelector('#demo-visits').textContent = activity.length;
+    document.querySelector('#demo-result-count').textContent = `${visibleAssets.length} asset${visibleAssets.length === 1 ? '' : 's'}`;
+    document.querySelector('#demo-empty').hidden = visibleAssets.length > 0;
+
+    document.querySelector('#demo-map-canvas').innerHTML = `<div class="demo-map-label demo-map-label-a">NORTH YARD</div><div class="demo-map-label demo-map-label-b">RIVERSIDE DEPOT</div><div class="demo-road demo-road-a"></div><div class="demo-road demo-road-b"></div><div class="demo-waterway"></div>${visibleAssets.map(asset => `<button type="button" class="demo-map-pin status-${asset.status === 'Current' ? 'current' : asset.status === 'Inspection due' ? 'due' : 'review'}${selectedAsset?.id === asset.id ? ' is-selected' : ''}" style="left:${asset.x}%;top:${asset.y}%" data-asset-id="${asset.id}" aria-label="Select ${escapeHtml(asset.name)}" title="${escapeHtml(asset.name)}"><span></span><small>${escapeHtml(asset.id)}</small></button>`).join('')}<div class="demo-map-scale">SAMPLE SITE PLAN</div>`;
+
+    document.querySelector('#demo-detail').innerHTML = selectedAsset ? `<div class="detail-overline"><span>SELECTED ASSET</span><b>${escapeHtml(selectedAsset.id)}</b></div><div class="detail-icon">${escapeHtml(selectedAsset.type.slice(0, 1))}</div><h2>${escapeHtml(selectedAsset.name)}</h2><p class="detail-site">${escapeHtml(selectedAsset.site)}</p><dl><div><dt>Category</dt><dd>${escapeHtml(selectedAsset.type)}</dd></div><div><dt>Status</dt><dd><span class="demo-status status-${selectedAsset.status === 'Current' ? 'current' : selectedAsset.status === 'Inspection due' ? 'due' : 'review'}">${escapeHtml(selectedAsset.status)}</span></dd></div><div><dt>Next inspection</dt><dd>${escapeHtml(selectedAsset.due)}</dd></div></dl><button type="button" class="demo-secondary demo-review-button" data-mark-reviewed="${selectedAsset.id}" ${selectedAsset.status === 'Current' ? 'disabled' : ''}>Mark reviewed</button>` : '<div class="demo-no-selection">No matching assets. Adjust your search or status filter.</div>';
+
+    document.querySelector('#demo-asset-rows').innerHTML = visibleAssets.map(asset => `<tr class="${selectedAsset?.id === asset.id ? 'is-selected' : ''}" data-select-row="${asset.id}"><td><button type="button" class="demo-table-asset" data-asset-id="${asset.id}"><b>${escapeHtml(asset.name)}</b><small>${escapeHtml(asset.id)}</small></button></td><td>${escapeHtml(asset.type)}</td><td>${escapeHtml(asset.site)}</td><td><span class="demo-status status-${asset.status === 'Current' ? 'current' : asset.status === 'Inspection due' ? 'due' : 'review'}">${escapeHtml(asset.status)}</span></td><td>${escapeHtml(asset.due)}</td></tr>`).join('');
+    document.querySelector('#demo-activity-list').innerHTML = activity.map(item => `<li><i class="activity-dot ${item.kind}"></i><div><span>${escapeHtml(item.time)}</span><b>${escapeHtml(item.title)}</b><p>${escapeHtml(item.detail)}</p></div></li>`).join('');
+    document.querySelector('#demo-form-asset').innerHTML = assets.map(asset => `<option value="${asset.id}">${escapeHtml(asset.name)} · ${asset.id}</option>`).join('');
+  }
+
+  function setView(view) {
+    activeView = view;
+    document.querySelector('#demo-map-view').hidden = view !== 'map';
+    document.querySelector('#demo-assets-view').hidden = view !== 'assets';
+    document.querySelector('#demo-activity-view').hidden = view !== 'activity';
+    root.querySelectorAll('[data-view]').forEach(button => button.setAttribute('aria-selected', String(button.dataset.view === view)));
+  }
+
+  root.addEventListener('click', event => {
+    const tab = event.target.closest('[data-view]');
+    if (tab) setView(tab.dataset.view);
+    const assetControl = event.target.closest('[data-asset-id]');
+    if (assetControl) {
+      selectedId = assetControl.dataset.assetId;
+      renderDemo();
+    }
+    const row = event.target.closest('[data-select-row]');
+    if (row && !assetControl) {
+      selectedId = row.dataset.selectRow;
+      setView('map');
+      renderDemo();
+    }
+    const markReviewed = event.target.closest('[data-mark-reviewed]');
+    if (markReviewed && !markReviewed.disabled) {
+      const asset = assets.find(item => item.id === markReviewed.dataset.markReviewed);
+      asset.status = 'Current';
+      asset.due = '30 days';
+      activity.unshift({ time: 'Just now', title: 'Asset marked as reviewed', detail: `${asset.name} · ${asset.site}`, kind: 'success' });
+      renderDemo();
+      showToast(`${asset.name} marked as reviewed`);
+    }
+    if (event.target.closest('#demo-add-inspection')) dialog.showModal();
+    if (event.target.closest('#demo-dialog-close, #demo-cancel')) dialog.close();
+    if (event.target.closest('#demo-reset')) {
+      assets = startingAssets.map(asset => ({ ...asset }));
+      selectedId = assets[0].id;
+      activity = [
+        { time: 'Today · 09:42', title: 'Routine check recorded', detail: 'Water pump 02 · Riverside depot', kind: 'success' },
+        { time: 'Today · 08:15', title: 'Inspection flagged for review', detail: 'Generator set A · Riverside depot', kind: 'warning' },
+        { time: 'Yesterday · 16:30', title: 'Asset details updated', detail: 'Transformer 4 · North yard', kind: 'neutral' }
+      ];
+      search.value = '';
+      statusFilter.value = 'all';
+      setView('map');
+      renderDemo();
+      showToast('Sample data reset');
+    }
+  });
+  search.addEventListener('input', renderDemo);
+  statusFilter.addEventListener('change', renderDemo);
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+    const formData = new FormData(form);
+    const asset = assets.find(item => item.id === formData.get('asset'));
+    if (!asset) return;
+    const needsFollowup = formData.get('result') === 'followup';
+    asset.status = needsFollowup ? 'Needs review' : 'Current';
+    asset.due = needsFollowup ? 'Follow-up' : '30 days';
+    const note = String(formData.get('note') || '').trim();
+    activity.unshift({ time: 'Just now', title: needsFollowup ? 'Inspection flagged for follow-up' : 'Routine inspection recorded', detail: `${asset.name} · ${asset.site}${note ? ` · ${note}` : ''}`, kind: needsFollowup ? 'warning' : 'success' });
+    selectedId = asset.id;
+    form.reset();
+    dialog.close();
+    renderDemo();
+    showToast('Inspection added to this demo session');
+  });
+
+  renderDemo();
+  window.scrollTo(0, 0);
+}
+
 function renderResource(resource) {
   document.title = `${resource.title} for ${resource.audienceLabel} | GeoLog`;
   document.querySelector('main').innerHTML = `<section class="resource-hero wrap"><a class="back-link" href="index.html#library">← Back to library</a><p class="eyebrow">FIELD NOTE / ${resource.category.replaceAll('-', ' ')}</p><h1>${resource.title}<br><em>for ${resource.audienceLabel}.</em></h1><p class="hero-lede">${resource.intro} This resource considers what that looks like in ${resource.placeLabel}, where context, constraints and local knowledge shape every useful answer.</p><div class="resource-meta"><span>GeoLog library</span><span>Reading guide · 6 min</span><span>Updated 2026</span></div></section><section class="article-body wrap"><article><p class="eyebrow">A WORKING FRAMEWORK</p><h2>Start with the situation, not the software.</h2><p>Good location intelligence begins with a shared understanding of the work. Before choosing a dashboard or a data model, name the decisions that need support, the people who make them and the conditions under which information is collected.</p><p>For ${resource.audienceLabel}, that often means connecting records that already exist with observations that only appear in the field. In ${resource.placeLabel}, the most useful system is usually the one that makes uncertainty visible while reducing the effort required to create a trustworthy record.</p><blockquote>“A map is useful when it changes what a team can see, discuss or decide.”</blockquote><h2>Three questions to carry forward</h2><div class="question-list"><div><span>01</span><p>What is the smallest reliable piece of context this decision needs?</p></div><div><span>02</span><p>Who has knowledge of this place that the current record does not include?</p></div><div><span>03</span><p>How will the team know that an insight has led to a better action?</p></div></div></article><aside><div class="aside-card"><span class="resource-type">RELATED TOPIC</span><h3>Keep building the picture.</h3><p>Explore adjacent methods from the GeoLog library.</p><a class="text-link" href="?page=${resources[(resources.indexOf(resource) + 1) % resources.length].slug}">Next resource ↗</a></div><div class="aside-card"><span class="resource-type">ABOUT THIS LIBRARY</span><p>These pages are educational working notes from an early-stage organization. They do not represent customer results, certifications or deployed product functionality.</p></div></aside></section>`;
   window.scrollTo(0, 0);
 }
 
-function renderRichResource(resource) {
-  document.title = `${resource.title} for ${resource.audienceLabel} | GeoLog`;
-  const nextResource = resources[(resources.indexOf(resource) + 1) % resources.length];
-  document.querySelector('main').innerHTML = `<section class="resource-hero wrap"><a class="back-link" href="index.html#library">← Back to library</a><p class="eyebrow">FIELD NOTE / ${resource.category.replaceAll('-', ' ')}</p><h1>${resource.title}<br><em>for ${resource.audienceLabel}.</em></h1><p class="hero-lede">${resource.intro} This guide focuses on how to ${resource.categoryGoal} in ${resource.placeLabel}, where context, constraints and local knowledge shape every useful answer.</p><div class="resource-meta"><span>GeoLog library</span><span>Reading guide · 8 min</span><span>Updated 2026</span></div></section><section class="article-body wrap"><article><p class="eyebrow">WHY THIS MATTERS</p><h2>Design around the decision.</h2><p>${resource.audienceContext}</p><p>${resource.placeContext} Those conditions change what a useful record looks like. A good approach starts by making the decision, the responsible person and the acceptable level of uncertainty visible before selecting a tool.</p><h2>The working objective</h2><p>For this topic, the practical objective is to ${resource.categoryGoal}. Begin with ${resource.categorySignals}. Keep the first version small enough that a team can use it during real work, then improve it from observed gaps rather than imagined features.</p><blockquote>“A map is useful when it changes what a team can see, discuss or decide.”</blockquote><h2>What to examine first</h2><div class="question-list"><div><span>01</span><p>Which decision becomes slower or less reliable when location context is missing?</p></div><div><span>02</span><p>What is the smallest reliable record that would improve that decision?</p></div><div><span>03</span><p>Who holds local knowledge that the current system does not represent?</p></div><div><span>04</span><p>What would make a field contributor trust this workflow enough to use it twice?</p></div></div><h2>A first experiment</h2><p>Choose one bounded area, one workflow and one accountable owner. Establish a baseline using the records already available, then run a short field cycle with explicit fields for location, time, source, confidence and next action. Review the results with the people who created the records, not only the people who consume them.</p><div class="question-list"><div><span>TEST</span><p>Measure completion rate, time to find a record, number of unresolved exceptions and whether the next action was clearer.</p></div><div><span>LEARN</span><p>Write down where people improvised, which fields were ambiguous and which information was requested but unavailable.</p></div></div></article><aside><div class="aside-card"><span class="resource-type">FIELD CHECKLIST</span><h3>Make the next step concrete.</h3><p>Define the decision, owner, location, time window, evidence standard and follow-up before expanding the map.</p></div><div class="aside-card"><span class="resource-type">RELATED TOPIC</span><h3>Keep building the picture.</h3><p>Explore an adjacent method from the GeoLog library.</p><a class="text-link" href="?page=${nextResource.slug}">Next resource ↗</a></div><div class="aside-card"><span class="resource-type">ABOUT THIS LIBRARY</span><p>These educational working notes are generated from a structured content model. They do not represent customer results, certifications or deployed product functionality.</p></div></aside></section>`;
-  window.scrollTo(0, 0);
-}
-
-function renderApplication() {
-  document.title = 'Azure startup application | GeoLog Technologies';
-  document.querySelector('main').innerHTML = `<section class="resource-hero wrap"><a class="back-link" href="index.html">← Back to GeoLog</a><p class="eyebrow">STARTUP APPLICATION / AZURE</p><h1>Building field intelligence <em>for the real world.</em></h1><p class="hero-lede">GeoLog Technologies is an early-stage geospatial technology initiative based in Port Harcourt, Nigeria. We are developing a practical workspace that helps field-intensive organizations connect location, asset records and operational decisions.</p><div class="resource-meta"><span>Founder: Samsung Fasasi</span><span>Stage: prototype and validation</span><span>Location: Nigeria</span></div></section><section class="article-body wrap application-body"><article><p class="eyebrow">THE OPPORTUNITY</p><h2>Important work is often missing shared context.</h2><p>Infrastructure, energy, logistics and environmental teams work across distributed places. Their information is commonly split between spreadsheets, messages, paper notes and disconnected map files. That makes it harder to know what changed, where attention is needed and whether a decision is based on a complete record.</p><p>GeoLog is starting with the operational layer: a simple way to structure field observations, connect them to assets and locations, and give teams a common view of what is happening.</p><h2>What we are building</h2><div class="application-cards"><div><span>01</span><h3>GeoView</h3><p>A map-based workspace for assets, observations and operational status.</p></div><div><span>02</span><h3>FieldLog</h3><p>Structured, location-aware records for inspections and field activity.</p></div><div><span>03</span><h3>Insight layer</h3><p>Search, summaries and trend views that support careful next actions.</p></div></div><h2>Why Azure</h2><p>Azure gives GeoLog a credible path from prototype to a secure, observable service without requiring a large infrastructure team. The proposed stack is intentionally modest and can scale with validated usage.</p><div class="azure-stack"><div><b>Azure Maps</b><span>Location visualization and geocoding</span></div><div><b>Azure Container Apps</b><span>Deploy the API and web services</span></div><div><b>Azure Database for PostgreSQL</b><span>Store structured operational records</span></div><div><b>Azure Blob Storage</b><span>Hold photos, exports and field attachments</span></div><div><b>Azure Functions</b><span>Run ingestion and scheduled workflows</span></div><div><b>Azure Monitor</b><span>Measure reliability and responsible usage</span></div></div></article><aside><div class="aside-card budget-card"><span class="resource-type">PROPOSED $100,000 CREDIT PLAN</span><h3>Use Azure credits to reach validation.</h3><div class="budget-row"><span>Prototype infrastructure</span><b>$35,000 · 35%</b></div><div class="budget-row"><span>Maps, storage and data</span><b>$25,000 · 25%</b></div><div class="budget-row"><span>Testing and observability</span><b>$20,000 · 20%</b></div><div class="budget-row"><span>AI-assisted search experiments</span><b>$10,000 · 10%</b></div><div class="budget-row"><span>Contingency</span><b>$10,000 · 10%</b></div></div><div class="aside-card"><span class="resource-type">12-MONTH MILESTONES</span><p><b>0–3 months</b><br>Working prototype and user interviews.</p><p><b>4–6 months</b><br>Pilot workflows with selected field teams.</p><p><b>7–12 months</b><br>Measure retention, reliability and willingness to pay.</p></div><div class="aside-card"><span class="resource-type">EVIDENCE TO ADD</span><p>Replace this note with incorporation details, founder profile, product screenshots, customer discovery notes and any verified traction before submitting.</p></div></aside></section>`;
-  window.scrollTo(0, 0);
-}
-
-if (requestedSlug === 'azure-application') renderApplication();
-else if (requestedSlug && bySlug.has(requestedSlug)) renderRichResource(bySlug.get(requestedSlug));
-else {
+if (requestedSlug === 'demo') renderDemo();
+else if (requestedSlug && bySlug.has(requestedSlug)) renderResource(bySlug.get(requestedSlug));
+else if (libraryGrid && searchInput && resultCount && loadMore) {
   renderLibrary();
   searchInput?.addEventListener('input', () => { visibleCount = 12; renderLibrary(); });
   loadMore?.addEventListener('click', () => { visibleCount += 12; renderLibrary(); });
-}
-
-if (requestedSlug === 'azure-application') {
-  const founderMeta = [...document.querySelectorAll('.resource-meta span')].find(item => item.textContent.startsWith('Founder:'));
-  if (founderMeta) founderMeta.textContent = 'Founder: Samson Fasasi';
-  const phoneMeta = document.createElement('span');
-  phoneMeta.innerHTML = '<a href="tel:+2348103520082">+234 810 352 0082</a>';
-  document.querySelector('.resource-meta')?.append(phoneMeta);
 }
 
 document.title = document.title.replaceAll('GeoLog', 'SamLog');

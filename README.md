@@ -1,20 +1,20 @@
 # SamLog Technologies Website
 
-A static organization website for SamLog Technologies, with a homepage and a structured library of 600 generated field resources.
+A static startup website for SamLog Technologies. The homepage presents the early-stage product direction, customer problem, business-model hypothesis and validation plan. The dashboard graphic is an illustrative concept, not a live product or customer deployment.
+
+An interactive product demo is available at `index.html?page=demo`. It uses fictional in-browser sample data; edits are not saved to a server and reset on reload. It is a product walkthrough, not an account-backed trial.
 
 ## How the 600 pages work
 
-The library is generated in `script.js` from three dimensions:
+The experimental field-reference routes are generated in `script.js` from three dimensions:
 
 - 10 topic categories
 - 10 audience groups
 - 6 operating environments
 
-That produces 600 unique resource URLs in the form `index.html?page=resource-slug`. Each resource combines topic-specific goals and signals, audience-specific operating context, and environment-specific constraints. It includes a unique title, summary, metadata, working framework, decision questions, first experiment, field checklist and related-resource link. The homepage includes search and progressive loading across the full collection.
+That produces 600 client-rendered route combinations in the form `index.html?page=resource-slug`. These generated combinations are not 600 separately researched or published guides, and are not presented as company traction on the homepage.
 
-This is a client-rendered static experience. It is easy to deploy, but the 600 resources are not separate crawlable HTML files. For search-engine indexing or a Microsoft Store/partner review that requires independent URLs, add a build step that prerenders the resource data into static files or move the content model into a CMS.
-
-The startup application brief is available at `index.html?page=azure-application`. It explains the problem, proposed product, Azure architecture, 12-month milestones and a percentage-based credit allocation. Replace the evidence placeholder with real incorporation, founder, discovery, pilot and traction details before submitting.
+This is a client-rendered static experience. The generated routes are not separate crawlable HTML files. For search-engine indexing or a review that requires independent URLs, add a build step that prerenders the resource data into static files or move the content model into a CMS.
 
 ## Deploy
 
@@ -24,7 +24,7 @@ The startup application brief is available at `index.html?page=azure-application
 
 ## Before publishing
 
-- Replace `hello@geolog.example` with a real organization email.
+- Replace `hello@samlog.example` with a real organization email.
 - Confirm the organization name, address, ownership and contact details.
 - Add privacy, accessibility, cookie and legal pages appropriate to the organization and jurisdiction.
 - Keep product, customer, certification and impact claims accurate. No website can guarantee approval by Microsoft or another reviewer; publishing complete, verifiable organization information is essential.
