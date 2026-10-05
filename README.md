@@ -1,6 +1,6 @@
-# SamLog Technologies Website
+# JoLog Technologies Website
 
-A static startup website for SamLog Technologies. The homepage presents the early-stage product direction, customer problem, business-model hypothesis and validation plan. The dashboard graphic is an illustrative concept, not a live product or customer deployment.
+A static startup website for JoLog Technologies. The homepage presents the early-stage product direction, customer problem, business-model hypothesis and validation plan. The dashboard graphic is an illustrative concept, not a live product or customer deployment.
 
 An interactive product demo is available at `index.html?page=demo`. It uses fictional in-browser sample data; edits are not saved to a server and reset on reload. It is a product walkthrough, not an account-backed trial.
 
@@ -24,7 +24,7 @@ This is a client-rendered static experience. The generated routes are not separa
 
 ## Before publishing
 
-- Replace `hello@samlog.example` with a real organization email.
+- Replace `hello@jolog.example` with a real organization email.
 - Confirm the organization name, address, ownership and contact details.
 - Add privacy, accessibility, cookie and legal pages appropriate to the organization and jurisdiction.
 - Keep product, customer, certification and impact claims accurate. No website can guarantee approval by Microsoft or another reviewer; publishing complete, verifiable organization information is essential.

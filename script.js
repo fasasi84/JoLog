@@ -74,7 +74,7 @@ function renderLibrary() {
 }
 
 function renderDemo() {
-  document.title = 'Try the SamLog demo';
+  document.title = 'Try the JoLog demo';
   const desktopNav = document.querySelector('.desktop-nav');
   const mobileNav = document.querySelector('.mobile-menu nav');
   const navMarkup = '<a href="index.html">Overview</a><a href="#demo-assets">Assets</a><a href="#demo-activity">Activity</a>';
@@ -83,7 +83,7 @@ function renderDemo() {
   const headerAction = document.querySelector('.site-header>.button');
   if (headerAction) {
     headerAction.href = 'index.html#contact';
-    headerAction.innerHTML = 'Contact SamLog <span aria-hidden="true">↗</span>';
+    headerAction.innerHTML = 'Contact JoLog <span aria-hidden="true">↗</span>';
   }
 
   const startingAssets = [
@@ -107,7 +107,7 @@ function renderDemo() {
   document.querySelector('main').innerHTML = `
     <section class="demo-page" id="demo-app">
       <div class="demo-wrap">
-        <div class="demo-breadcrumb"><a href="index.html">← SamLog</a><span>INTERACTIVE DEMO</span></div>
+        <div class="demo-breadcrumb"><a href="index.html">← JoLog</a><span>INTERACTIVE DEMO</span></div>
         <header class="demo-heading"><div><p class="demo-eyebrow">SAMPLE WORKSPACE · PORT HARCOURT</p><h1>Site operations</h1><p>Explore a sample asset register, inspect a location and try logging a field visit.</p></div><button class="demo-primary" type="button" id="demo-add-inspection"><span aria-hidden="true">＋</span> Log inspection</button></header>
         <p class="demo-disclosure"><span aria-hidden="true">i</span> Demo data is fictional. Changes stay in this browser session and reset when you reload.</p>
         <div class="demo-metrics" aria-label="Workspace summary"><div><span>ASSETS</span><b id="demo-total">6</b><small>In this sample site</small></div><div><span>NEEDS ATTENTION</span><b id="demo-attention">3</b><small>Due or flagged</small></div><div><span>UP TO DATE</span><b id="demo-current">3</b><small>Marked current</small></div><div><span>ACTIVITY ITEMS</span><b id="demo-visits">3</b><small>In this demo session</small></div></div>
@@ -118,7 +118,7 @@ function renderDemo() {
         </div>
         <section class="demo-table-panel" id="demo-assets-view" role="tabpanel" hidden><div class="demo-panel-heading"><div><h2>Asset register</h2><p>Six fictional assets across two sample sites</p></div><span id="demo-result-count">6 assets</span></div><div class="demo-table-scroll"><table><thead><tr><th>Asset</th><th>Type</th><th>Site</th><th>Status</th><th>Next inspection</th></tr></thead><tbody id="demo-asset-rows"></tbody></table></div><p class="demo-empty" id="demo-empty" hidden>No sample assets match these filters.</p></section>
         <section class="demo-activity-panel" id="demo-activity-view" role="tabpanel" hidden><div class="demo-panel-heading"><div><h2>Recent activity</h2><p>Actions taken in this browser session</p></div></div><ol id="demo-activity-list"></ol></section>
-        <div class="demo-footer"><span>SamLog product demo · Fictional sample data</span><button type="button" id="demo-reset">Reset sample data</button></div>
+        <div class="demo-footer"><span>JoLog product demo · Fictional sample data</span><button type="button" id="demo-reset">Reset sample data</button></div>
         <dialog class="demo-dialog" id="demo-inspection-dialog"><form id="demo-inspection-form"><div class="demo-dialog-heading"><div><p class="demo-eyebrow">FIELD VISIT</p><h2>Log an inspection</h2></div><button class="demo-icon-button" type="button" id="demo-dialog-close" aria-label="Close">×</button></div><label>Asset<select name="asset" id="demo-form-asset" required></select></label><label>Visit result<select name="result" required><option value="routine">Routine check completed</option><option value="followup">Follow-up needed</option></select></label><label>Field note<textarea name="note" rows="3" maxlength="240" placeholder="Add a short sample note (optional)"></textarea></label><p class="demo-form-hint">Use fictional details only. This demo does not save or send information.</p><div class="demo-dialog-actions"><button class="demo-secondary" type="button" id="demo-cancel">Cancel</button><button class="demo-primary" type="submit">Save inspection</button></div></form></dialog>
         <div class="demo-toast" id="demo-toast" role="status" aria-live="polite"></div>
       </div>
@@ -240,8 +240,8 @@ function renderDemo() {
 }
 
 function renderResource(resource) {
-  document.title = `${resource.title} for ${resource.audienceLabel} | GeoLog`;
-  document.querySelector('main').innerHTML = `<section class="resource-hero wrap"><a class="back-link" href="index.html#library">← Back to library</a><p class="eyebrow">FIELD NOTE / ${resource.category.replaceAll('-', ' ')}</p><h1>${resource.title}<br><em>for ${resource.audienceLabel}.</em></h1><p class="hero-lede">${resource.intro} This resource considers what that looks like in ${resource.placeLabel}, where context, constraints and local knowledge shape every useful answer.</p><div class="resource-meta"><span>GeoLog library</span><span>Reading guide · 6 min</span><span>Updated 2026</span></div></section><section class="article-body wrap"><article><p class="eyebrow">A WORKING FRAMEWORK</p><h2>Start with the situation, not the software.</h2><p>Good location intelligence begins with a shared understanding of the work. Before choosing a dashboard or a data model, name the decisions that need support, the people who make them and the conditions under which information is collected.</p><p>For ${resource.audienceLabel}, that often means connecting records that already exist with observations that only appear in the field. In ${resource.placeLabel}, the most useful system is usually the one that makes uncertainty visible while reducing the effort required to create a trustworthy record.</p><blockquote>“A map is useful when it changes what a team can see, discuss or decide.”</blockquote><h2>Three questions to carry forward</h2><div class="question-list"><div><span>01</span><p>What is the smallest reliable piece of context this decision needs?</p></div><div><span>02</span><p>Who has knowledge of this place that the current record does not include?</p></div><div><span>03</span><p>How will the team know that an insight has led to a better action?</p></div></div></article><aside><div class="aside-card"><span class="resource-type">RELATED TOPIC</span><h3>Keep building the picture.</h3><p>Explore adjacent methods from the GeoLog library.</p><a class="text-link" href="?page=${resources[(resources.indexOf(resource) + 1) % resources.length].slug}">Next resource ↗</a></div><div class="aside-card"><span class="resource-type">ABOUT THIS LIBRARY</span><p>These pages are educational working notes from an early-stage organization. They do not represent customer results, certifications or deployed product functionality.</p></div></aside></section>`;
+  document.title = `${resource.title} for ${resource.audienceLabel} | JoLog`;
+  document.querySelector('main').innerHTML = `<section class="resource-hero wrap"><a class="back-link" href="index.html#library">← Back to library</a><p class="eyebrow">FIELD NOTE / ${resource.category.replaceAll('-', ' ')}</p><h1>${resource.title}<br><em>for ${resource.audienceLabel}.</em></h1><p class="hero-lede">${resource.intro} This resource considers what that looks like in ${resource.placeLabel}, where context, constraints and local knowledge shape every useful answer.</p><div class="resource-meta"><span>JoLog library</span><span>Reading guide · 6 min</span><span>Updated 2026</span></div></section><section class="article-body wrap"><article><p class="eyebrow">A WORKING FRAMEWORK</p><h2>Start with the situation, not the software.</h2><p>Good location intelligence begins with a shared understanding of the work. Before choosing a dashboard or a data model, name the decisions that need support, the people who make them and the conditions under which information is collected.</p><p>For ${resource.audienceLabel}, that often means connecting records that already exist with observations that only appear in the field. In ${resource.placeLabel}, the most useful system is usually the one that makes uncertainty visible while reducing the effort required to create a trustworthy record.</p><blockquote>“A map is useful when it changes what a team can see, discuss or decide.”</blockquote><h2>Three questions to carry forward</h2><div class="question-list"><div><span>01</span><p>What is the smallest reliable piece of context this decision needs?</p></div><div><span>02</span><p>Who has knowledge of this place that the current record does not include?</p></div><div><span>03</span><p>How will the team know that an insight has led to a better action?</p></div></div></article><aside><div class="aside-card"><span class="resource-type">RELATED TOPIC</span><h3>Keep building the picture.</h3><p>Explore adjacent methods from the JoLog library.</p><a class="text-link" href="?page=${resources[(resources.indexOf(resource) + 1) % resources.length].slug}">Next resource ↗</a></div><div class="aside-card"><span class="resource-type">ABOUT THIS LIBRARY</span><p>These pages are educational working notes from an early-stage organization. They do not represent customer results, certifications or deployed product functionality.</p></div></aside></section>`;
   window.scrollTo(0, 0);
 }
 
@@ -253,12 +253,3 @@ else if (libraryGrid && searchInput && resultCount && loadMore) {
   loadMore?.addEventListener('click', () => { visibleCount += 12; renderLibrary(); });
 }
 
-document.title = document.title.replaceAll('GeoLog', 'SamLog');
-document.querySelectorAll('.logo').forEach(logo => { logo.textContent = 'S'; });
-document.querySelectorAll('.map-center').forEach(mapCenter => { mapCenter.innerHTML = 'SAM<br><span>LOG</span>'; });
-document.querySelectorAll('[aria-label*="GeoLog"]').forEach(element => { element.setAttribute('aria-label', element.getAttribute('aria-label').replaceAll('GeoLog', 'SamLog')); });
-const brandWalker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
-const brandNodes = [];
-while (brandWalker.nextNode()) brandNodes.push(brandWalker.currentNode);
-brandNodes.forEach(node => { node.nodeValue = node.nodeValue.replaceAll('GeoLog', 'SamLog'); });
-document.querySelectorAll('[href*="geolog.example"]').forEach(link => { link.href = link.href.replace('geolog.example', 'samlog.example'); });
