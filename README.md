@@ -24,7 +24,7 @@ This is a client-rendered static experience. The generated routes are not separa
 
 ## Before publishing
 
-- Contact email: `jojo.fasasi@jolog.org`.
+- Contact emails: `jojo.fasasi@jolog.org`, `fasasi.joseph@jolog.org`, `fasasi.bolaji@jolog.org`.
 - Confirm the organization name, address, ownership and contact details.
 - Add privacy, accessibility, cookie and legal pages appropriate to the organization and jurisdiction.
 - Keep product, customer, certification and impact claims accurate. No website can guarantee approval by Microsoft or another reviewer; publishing complete, verifiable organization information is essential.
